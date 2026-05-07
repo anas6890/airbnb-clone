@@ -12,10 +12,10 @@ module.exports = {
                 sans: ["Plus Jakarta Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
             },
             colors: {
-                airbnb: {
-                    red: "#FF385C",
-                    pink: "#E31C5F",
-                    dark: "#222222",
+                emibnb: {
+                    primary: "#00A699",
+                    secondary: "#FF5A5F",
+                    dark: "#484848",
                 },
             },
             boxShadow: {
