@@ -88,5 +88,22 @@ body {
 .date-picker { border: none; outline: none; width: 100%; background: transparent; color: #0F172A; font-size: 15px; font-weight: 500; }
 .react-datepicker-wrapper { width: 100%; }
 
+.dropdown-menu { position: absolute; top: calc(100% + 12px); left: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 20px; padding: 16px; min-width: 320px; z-index: 200; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); }
+.destinations-list { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow-y: auto; color: #0F172A; }
+.destinations-list::-webkit-scrollbar { width: 6px; }
+.destinations-list::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 4px; }
+.destinations-list li { padding: 12px 16px; cursor: pointer; border-radius: 12px; transition: background 0.2s ease; font-size: 15px; font-weight: 500; display: flex; align-items: center; }
+.destinations-list li:hover { background: #F1F5F9; }
+
+.guests-dropdown { width: 340px; right: 0; left: auto; }
+.guest-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #E2E8F0; font-size: 15px; }
+.guest-row:last-child { border-bottom: none; }
+.guest-row strong { color: #0F172A; font-weight: 600; display: block; }
+.guest-controls { display: flex; align-items: center; gap: 14px; }
+.guest-controls button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #CBD5E1; background: transparent; color: #64748B; font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+.guest-controls button:hover:not(:disabled) { border-color: #0F172A; color: #0F172A; }
+.guest-controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+.guest-controls span { font-weight: 500; width: 14px; text-align: center; color: #0F172A; }
+
 @media (max-width: 1200px) { .listings-grid { grid-template-columns: repeat(3, 1fr); } .navbar { padding: 20px 40px; margin: 20px; border-radius: 32px; } .listings-section { margin: 0 20px 40px 20px; padding: 40px; border-radius: 32px; } }
-@media (max-width: 768px) { .listings-grid { grid-template-columns: 1fr; } .navbar-top { flex-direction: column; gap: 20px; } .nav-tabs { width: 100%; justify-content: center; margin-left: 0; } .search-bar { flex-direction: column; border-radius: 24px; padding: 8px; } .search-field { width: 100%; } .divider { width: 100%; height: 1px; } .search-btn { width: 100%; margin: 8px 0 0 0; justify-content: center; border-radius: 20px; } .search-btn::before { content: "Rechercher"; position: static; transform: none; font-size: 16px; font-weight: 600; } .search-btn { color: white; } .navbar { margin: 10px; padding: 16px; border-radius: 24px; top: 10px; } .listings-section { margin: 0 10px 20px 10px; padding: 24px; border-radius: 24px; } }
+@media (max-width: 768px) { .listings-grid { grid-template-columns: 1fr; } .navbar-top { flex-direction: column; gap: 20px; } .nav-tabs { width: 100%; justify-content: center; margin-left: 0; } .search-bar { flex-direction: column; border-radius: 24px; padding: 8px; } .search-field { width: 100%; } .divider { width: 100%; height: 1px; } .search-btn { width: 100%; margin: 8px 0 0 0; justify-content: center; border-radius: 20px; } .search-btn::before { content: "Rechercher"; position: static; transform: none; font-size: 16px; font-weight: 600; } .search-btn { color: white; } .navbar { margin: 10px; padding: 16px; border-radius: 24px; top: 10px; } .listings-section { margin: 0 10px 20px 10px; padding: 24px; border-radius: 24px; } .guests-dropdown { right: auto; left: 0; } }

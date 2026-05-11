@@ -17,7 +17,7 @@ class HouseRules {
   @Prop({ default: false }) petsAllowed: boolean;
   @Prop({ default: false }) smokingAllowed: boolean;
   @Prop({ default: false }) partiesAllowed: boolean;
-  @Prop({ default: 22 }) checkInTime: number;
+  @Prop({ default: 14 }) checkInTime: number;
   @Prop({ default: 11 }) checkOutTime: number;
 }
 
@@ -61,6 +61,15 @@ export class Listing {
 
   @Prop({ type: [AvailabilityWindow], default: [] })
   availability: AvailabilityWindow[];
+
+  @Prop({ required: true })
+  bedrooms: number;
+
+  @Prop({ required: true })
+  beds: number;
+
+  @Prop({ required: true })
+  bathrooms: number;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   hostId: Types.ObjectId;

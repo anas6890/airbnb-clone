@@ -11,28 +11,47 @@ export class BookingsService {
   ) {}
 
   async create(dto: CreateBookingDto): Promise<BookingDocument> {
-    const booking = new this.bookingModel(dto);
+    const booking = new this.bookingModel({
+      checkIn: dto.checkIn,
+      checkOut: dto.checkOut,
+      guestId: dto.guestId,
+      listingId: dto.listingId,
+      guests: dto.guests,
+      status: 'pending',
+      priceSnapshot: {
+        pricePerNight: 0,
+        nights: 1,
+        subtotal: dto.totalPrice,
+        cleaningFee: 0,
+        serviceFee: 0,
+        total: dto.totalPrice,
+      },
+      guestSnapshot: {
+        name: 'Guest User',
+        avatar: '',
+      },
+    });
     return booking.save();
   }
 
   async findAll(): Promise<BookingDocument[]> {
     return this.bookingModel
       .find()
-      .populate('listing', 'title location')
-      .populate('guest', 'name email');
+      .populate('listingId', 'title location')
+      .populate('guestId', 'name email');
   }
 
   async findByGuest(guestId: string): Promise<BookingDocument[]> {
     return this.bookingModel
-      .find({ guest: guestId })
-      .populate('listing', 'title location images');
+      .find({ guestId })
+      .populate('listingId', 'title location images');
   }
 
   async findOne(id: string): Promise<BookingDocument> {
     const booking = await this.bookingModel
       .findById(id)
-      .populate('listing')
-      .populate('guest', 'name email');
+      .populate('listingId')
+      .populate('guestId', 'name email');
     if (!booking) throw new NotFoundException('Booking not found');
     return booking;
   }

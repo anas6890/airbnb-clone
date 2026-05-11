@@ -11,20 +11,26 @@ export class ReviewsService {
   ) {}
 
   async create(dto: CreateReviewDto): Promise<ReviewDocument> {
-    const review = new this.reviewModel(dto);
+    const review = new this.reviewModel({
+      ...dto,
+      authorSnapshot: {
+        name: 'Guest User',
+        avatar: '',
+      }
+    });
     return review.save();
   }
 
   async findByListing(listingId: string): Promise<ReviewDocument[]> {
     return this.reviewModel
-      .find({ listing: listingId })
-      .populate('author', 'name avatar');
+      .find({ targetId: listingId, targetModel: 'Listing' })
+      .populate('authorId', 'name avatar');
   }
 
   async findOne(id: string): Promise<ReviewDocument> {
     const review = await this.reviewModel
       .findById(id)
-      .populate('author', 'name avatar');
+      .populate('authorId', 'name avatar');
     if (!review) throw new NotFoundException('Review not found');
     return review;
   }

@@ -13,10 +13,26 @@ class NotificationPrefs {
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, trim: true })
-  name: string;
+  firstname: string;
+
+  @Prop({ required: true, trim: true })
+  lastname: string;
 
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
+
+  @Prop({
+    required: true,
+    validate: {
+      validator: (date: Date) => {
+        const ageDiff = Date.now() - date.getTime();
+        const age = new Date(ageDiff).getUTCFullYear() - 1970;
+        return age >= 18;
+      },
+      message: "L'utilisateur doit avoir au moins 18 ans",
+    },
+  })
+  birthdate: Date;
 
   @Prop({ required: true })
   passwordHash: string;

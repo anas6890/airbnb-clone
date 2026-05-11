@@ -1,13 +1,30 @@
-import { IsString, IsNotEmpty, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  Min,
+  Max,
+  IsEnum,
+} from 'class-validator';
 
 export class CreateReviewDto {
   @IsString()
   @IsNotEmpty()
-  listing: string;
+  targetId: string;
 
   @IsString()
   @IsNotEmpty()
-  author: string;
+  authorId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bookingId: string;
+
+  @IsEnum(['listing', 'experience'])
+  type: string;
+
+  @IsEnum(['Listing', 'Experience'])
+  targetModel: string;
 
   @IsNumber()
   @Min(1)

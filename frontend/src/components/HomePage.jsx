@@ -7,21 +7,35 @@ export default function HomePage() {
     const [listings, setListings] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/listings")
+        fetch("http://localhost:3001/listings")
             .then((res) => res.json())
-            .then((data) => setListings(data))
+            .then((data) => {
+                // Mappe les clés du backend vers les props attendues par Cards.jsx
+                const mappedData = data.map(item => ({
+                    _id: item._id,
+                    name: item.title,
+                    dates: "Disponible",
+                    price: item.pricePerNight,
+                    rating: item.avgRating || 0,
+                    isFavorite: false,
+                    image: item.images && item.images.length > 0 ? item.images[0] : "",
+                }));
+                setListings(mappedData.length ? mappedData : fallbackData);
+            })
             .catch(() => {
                 // Données de secours si le backend n'est pas lancé
-                setListings([
-                    { _id: "1", name: "Appartement · Marrakech", dates: "15–17 mai", price: 238, rating: 5.0, isFavorite: false, image: "" },
-                    { _id: "2", name: "Appartement · Marrakech", dates: "15–17 mai", price: 144, rating: 4.94, isFavorite: true, image: "" },
-                    { _id: "3", name: "Appartement · Marrakech", dates: "8–10 mai",  price: 106, rating: 5.0, isFavorite: true, image: "" },
-                    { _id: "4", name: "Appartement · Marrakech", dates: "22–24 mai", price: 131, rating: 4.98, isFavorite: true, image: "" },
-                    { _id: "5", name: "Appartement · Marrakech", dates: "15–17 mai", price: 111, rating: 4.83, isFavorite: true, image: "" },
-                    { _id: "6", name: "Appartement en résidence · Marrakech", dates: "15–17 mai", price: 138, rating: 5.0, isFavorite: false, image: "" },
-                ]);
+                setListings(fallbackData);
             });
     }, []);
+
+    const fallbackData = [
+        { _id: "1", name: "Appartement · Marrakech", dates: "15–17 mai", price: 238, rating: 5.0, isFavorite: false, image: "" },
+        { _id: "2", name: "Appartement · Marrakech", dates: "15–17 mai", price: 144, rating: 4.94, isFavorite: true, image: "" },
+        { _id: "3", name: "Appartement · Marrakech", dates: "8–10 mai",  price: 106, rating: 5.0, isFavorite: true, image: "" },
+        { _id: "4", name: "Appartement · Marrakech", dates: "22–24 mai", price: 131, rating: 4.98, isFavorite: true, image: "" },
+        { _id: "5", name: "Appartement · Marrakech", dates: "15–17 mai", price: 111, rating: 4.83, isFavorite: true, image: "" },
+        { _id: "6", name: "Appartement en résidence · Marrakech", dates: "15–17 mai", price: 138, rating: 5.0, isFavorite: false, image: "" },
+    ];
 
     return (
         <div className="main-wrapper">
