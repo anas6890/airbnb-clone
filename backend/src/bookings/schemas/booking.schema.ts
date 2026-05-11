@@ -19,6 +19,14 @@ class GuestSnapshot {
   @Prop({ default: '' }) avatar: string;
 }
 
+@Schema({ _id: false })
+class GuestsBreakdown {
+  @Prop({ required: true, min: 1 }) adults: number;
+  @Prop({ default: 0, min: 0 }) children: number;
+  @Prop({ default: 0, min: 0 }) infants: number;
+  @Prop({ default: 0, min: 0 }) pets: number;
+}
+
 @Schema({ timestamps: true })
 export class Booking {
   @Prop({ required: true })
@@ -39,6 +47,9 @@ export class Booking {
   @Prop({ type: GuestSnapshot, required: true })
   guestSnapshot: GuestSnapshot;
 
+  @Prop({ type: GuestsBreakdown, required: true })
+  guestsBreakdown: GuestsBreakdown;
+
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   guestId: Types.ObjectId;
 
@@ -47,9 +58,6 @@ export class Booking {
 
   @Prop({ type: Types.ObjectId, ref: 'Payment', default: null })
   paymentId: Types.ObjectId | null;
-
-  @Prop({ required: true, min: 1 })
-  guests: number;
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
