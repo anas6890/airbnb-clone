@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { RequestWithUser } from '../auth/types/request-with-user';
+import { JwtAuthGuard } from '../Auth/jwt-auth.guard';
+import type { RequestWithUser } from '../Auth/types/request-with-user';
 
 @Controller('bookings')
 @UseGuards(JwtAuthGuard) // toutes les routes nécessitent un JWT

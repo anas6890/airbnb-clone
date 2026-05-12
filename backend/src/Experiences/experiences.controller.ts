@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ExperiencesService, ExperienceFilters } from './experiences.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { RequestWithUser } from '../auth/types/request-with-user';
+import { JwtAuthGuard } from '../Auth/jwt-auth.guard';
+import type { RequestWithUser } from '../Auth/types/request-with-user';
 
 @Controller('experiences')
 export class ExperiencesController {

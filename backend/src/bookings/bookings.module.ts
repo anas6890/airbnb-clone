@@ -5,7 +5,7 @@ import { BookingsService } from './bookings.service';
 import { Booking, BookingSchema } from './schemas/booking.schema';
 import { Listing, ListingSchema } from '../listings/schemas/listing.schema';
 import { User, UserSchema } from '../users/schemas/user.schema';
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from '../Auth/auth.module';
 
 @Module({
   imports: [

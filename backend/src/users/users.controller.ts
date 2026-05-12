@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { RequestWithUser } from '../auth/types/request-with-user';
+import { JwtAuthGuard } from '../Auth/jwt-auth.guard';
+import type { RequestWithUser } from '../Auth/types/request-with-user';
 
 @Controller('users')
 export class UserController {

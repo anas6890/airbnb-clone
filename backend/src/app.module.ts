@@ -3,13 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './Auth/auth.module';
 import { UserModule } from './users/users.module';
 import { ListingsModule } from './listings/listings.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
-import { ExperiencesModule } from './experiences/experiences.module';
-import { PaymentsModule } from './payments/payments.module';
+import { ExperiencesModule } from './Experiences/experiences.module';
+import { PaymentsModule } from './Payments/payments.module';
 
 @Module({
   imports: [

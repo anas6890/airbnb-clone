@@ -12,7 +12,7 @@ import { Listing, ListingDocument } from '../listings/schemas/listing.schema';
 import {
   Experience,
   ExperienceDocument,
-} from '../experiences/schemas/experience.schema';
+} from '../Experiences/schemas/experience.schema';
 import { Booking, BookingDocument } from '../bookings/schemas/booking.schema';
 import { CreateReviewDto } from './dto/create-review.dto';
 
