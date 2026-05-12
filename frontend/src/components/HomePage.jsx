@@ -1,16 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import SearchBar from "./SearchBar";
 import Cards from "./Cards";
-
+import Categories from "./Categories";
 export default function HomePage() {
     const [listings, setListings] = useState([]);
-
     useEffect(() => {
-        fetch("http://localhost:3001/listings")
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        fetch(`${apiUrl}/listings`)
             .then((res) => res.json())
             .then((data) => {
-                // Mappe les clés du backend vers les props attendues par Cards.jsx
                 const mappedData = data.map(item => ({
                     _id: item._id,
                     name: item.title,
@@ -20,71 +18,36 @@ export default function HomePage() {
                     isFavorite: false,
                     image: item.images && item.images.length > 0 ? item.images[0] : "",
                 }));
-                setListings(mappedData.length ? mappedData : fallbackData);
+                // Duplicate elements if the database only returns a few so the grid looks full
+                let result = [];
+                if (mappedData.length > 0) {
+                    for(let i=0; i<4; i++){
+                        result = [...result, ...mappedData.map(md => ({...md, _id: md._id + "_" + i}))]
+                    }
+                }
+                setListings(result.length ? result : fallbackData);
             })
             .catch(() => {
-                // Données de secours si le backend n'est pas lancé
                 setListings(fallbackData);
             });
     }, []);
-
     const fallbackData = [
-        { _id: "1", name: "Appartement · Marrakech", dates: "15–17 mai", price: 238, rating: 5.0, isFavorite: false, image: "" },
-        { _id: "2", name: "Appartement · Marrakech", dates: "15–17 mai", price: 144, rating: 4.94, isFavorite: true, image: "" },
-        { _id: "3", name: "Appartement · Marrakech", dates: "8–10 mai",  price: 106, rating: 5.0, isFavorite: true, image: "" },
-        { _id: "4", name: "Appartement · Marrakech", dates: "22–24 mai", price: 131, rating: 4.98, isFavorite: true, image: "" },
-        { _id: "5", name: "Appartement · Marrakech", dates: "15–17 mai", price: 111, rating: 4.83, isFavorite: true, image: "" },
-        { _id: "6", name: "Appartement en résidence · Marrakech", dates: "15–17 mai", price: 138, rating: 5.0, isFavorite: false, image: "" },
+        { _id: "1", name: "Riad Marrakech", dates: "15-17 mai", price: 238, rating: 5.0, isFavorite: false, image: "https://images.unsplash.com/photo-1539037116277-4db20d5bc8ea?auto=format&fit=crop&q=80&w=800" },
+        { _id: "2", name: "Villa Palmeraie", dates: "15-17 mai", price: 144, rating: 4.94, isFavorite: true, image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=800" },
+        { _id: "3", name: "Maison d'H�tes", dates: "8-10 mai",  price: 106, rating: 5.0, isFavorite: true, image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=800" },
+        { _id: "4", name: "Appartement Gu�liz", dates: "22-24 mai", price: 131, rating: 4.98, isFavorite: true, image: "https://images.unsplash.com/photo-1582268611956-6211081014cc?auto=format&fit=crop&q=80&w=800" },
+        { _id: "5", name: "Boutique Hotel", dates: "15-17 mai", price: 111, rating: 4.83, isFavorite: true, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800" },
+        { _id: "6", name: "Penthouse vue mer", dates: "15-17 mai", price: 138, rating: 5.0, isFavorite: false, image: "https://images.unsplash.com/photo-1499955085172-a104c9463ece?auto=format&fit=crop&q=80&w=800" },
+        { _id: "7", name: "Riad Marrakech", dates: "15-17 mai", price: 238, rating: 5.0, isFavorite: false, image: "https://images.unsplash.com/photo-1539037116277-4db20d5bc8ea?auto=format&fit=crop&q=80&w=800" },
+        { _id: "8", name: "Villa Palmeraie", dates: "15-17 mai", price: 144, rating: 4.94, isFavorite: true, image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=800" },
     ];
-
     return (
-        <div className="main-wrapper">
-            <div className="light-ambient">
-                <div className="light-shape shape-1"></div>
-                <div className="light-shape shape-2"></div>
-                <div className="light-shape shape-3"></div>
-            </div>
-
-            {/* NAVBAR */}
-            <nav className="navbar">
-                <div className="navbar-top">
-                    <a href="/" className="logo">
-                        <img src="/logo.png" alt="alasBnb" className="logo-img" />
-                    </a>
-                    <div className="nav-tabs">
-                        <a className="nav-tab active" href="#">Logements</a>
-                        <a className="nav-tab" href="#">
-                            <span className="floating-badge">Nouveau</span>
-                            Expériences
-                        </a>
-                    </div>
-                    <div className="nav-right">
-                        <span className="become-host">Devenir hôte</span>
-                        <div className="globe-icon">
-                            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm-.5 15.939A7.001 7.001 0 0 1 1.06 8.5H4.15a13.313 13.313 0 0 0 .524 4.544 14.887 14.887 0 0 0 2.825 2.895zM4.15 7.5H1.06A7.001 7.001 0 0 1 7.5.061v14.43A14.896 14.896 0 0 0 4.675 11.6 13.315 13.315 0 0 0 4.15 7.5zM8.5.061A7.001 7.001 0 0 1 14.94 7.5h-3.09a13.313 13.313 0 0 0-.525-4.544A14.889 14.889 0 0 0 8.5.061zM11.85 8.5h3.09a7.001 7.001 0 0 1-6.44 7.439v-14.43A14.893 14.893 0 0 0 11.325 4.4 13.314 13.314 0 0 0 11.85 8.5z" /></svg>
-                        </div>
-                        <div className="nav-icons">
-                            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"><path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
-                            <div className="avatar-circle">
-                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <SearchBar />
-            </nav>
-
-
-            {/* LISTINGS */}
-            <div className="listings-section">
-                <div className="section-header">
-                    <h2 className="section-title">Logements populaires · Marrakech →</h2>
-                    <div className="nav-arrows">
-                        <button className="arrow-btn">‹</button>
-                        <button className="arrow-btn">›</button>
-                    </div>
-                </div>
-                <div className="listings-grid">
+        <div>
+            {/* CATEGORIES NAV */}
+            <Categories />
+            {/* LISTINGS GRID */}
+            <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 pt-8 pb-20">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
                     {listings.map((listing) => (
                         <Cards key={listing._id} listing={listing} />
                     ))}
@@ -93,3 +56,4 @@ export default function HomePage() {
         </div>
     );
 }
+
