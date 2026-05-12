@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { RequestWithUser } from '../auth/types/request-with-user';
+import { JwtAuthGuard } from '../Auth/jwt-auth.guard';
+import type { RequestWithUser } from '../Auth/types/request-with-user';
 
 @Controller('reviews')
 export class ReviewsController {

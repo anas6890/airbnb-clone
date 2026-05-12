@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import Stripe from 'stripe';
 import { STRIPE_CLIENT } from '../stripe/stripe.module';
 import { Payment, PaymentDocument } from './schemas/payment.schema';
 import { Booking, BookingDocument } from '../bookings/schemas/booking.schema';

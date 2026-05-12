@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ExperiencesController } from './experiences.controller';
 import { ExperiencesService } from './experiences.service';
 import { Experience, ExperienceSchema } from './schemas/experience.schema';
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from '../Auth/auth.module';
 
 @Module({
   imports: [

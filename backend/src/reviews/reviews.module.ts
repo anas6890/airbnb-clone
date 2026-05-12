@@ -8,9 +8,9 @@ import { Listing, ListingSchema } from '../listings/schemas/listing.schema';
 import {
   Experience,
   ExperienceSchema,
-} from '../experiences/schemas/experience.schema';
+} from '../Experiences/schemas/experience.schema';
 import { Booking, BookingSchema } from '../bookings/schemas/booking.schema';
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from '../Auth/auth.module';
 
 @Module({
   imports: [

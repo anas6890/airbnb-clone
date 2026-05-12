@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ListingsService, ListingFilters } from './listings.service';
 import { CreateListingDto } from './dto/create-listing.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { RequestWithUser } from '../auth/types/request-with-user';
+import { JwtAuthGuard } from '../Auth/jwt-auth.guard';
+import type { RequestWithUser } from '../Auth/types/request-with-user';
 
 @Controller('listings')
 export class ListingsController {

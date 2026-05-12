@@ -1,6 +1,63 @@
+# Dependencies
 node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment
 .env
-dist/
-.next/
-.idea/
 .env.local
+.env.*.local
+.env.production
+.env.production.local
+
+# Build outputs (DO NOT ADD - clean roots only)
+dist/
+build/
+.next/
+out/
+coverage/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+.sublime-workspace
+.sublime-project
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+.directory
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+.nyc_output/
+.jest/
+.coverage/
+
+# Temporary
+.tmp/
+temp/
+*.tmp
+*.bak
+*~
