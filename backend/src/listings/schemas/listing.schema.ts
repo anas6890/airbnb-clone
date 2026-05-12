@@ -8,8 +8,8 @@ class Location {
   @Prop({ required: true }) address: string;
   @Prop({ required: true }) city: string;
   @Prop({ required: true }) country: string;
-  @Prop() lat: number;
-  @Prop() lng: number;
+  @Prop({ required: true }) lat: number;
+  @Prop({ required: true }) lng: number;
 }
 
 @Schema({ _id: false })
@@ -44,6 +44,12 @@ export class Listing {
   @Prop({ required: true, min: 0 })
   pricePerNight: number;
 
+  @Prop({ default: 0, min: 0 })
+  cleaningFee: number;
+
+  @Prop({ default: 0, min: 0 })
+  serviceFee: number;
+
   @Prop({ required: true, min: 1 })
   maxGuests: number;
 
@@ -62,13 +68,13 @@ export class Listing {
   @Prop({ type: [AvailabilityWindow], default: [] })
   availability: AvailabilityWindow[];
 
-  @Prop({ required: true })
+  @Prop({ required: true, min: 0 })
   bedrooms: number;
 
-  @Prop({ required: true })
+  @Prop({ required: true, min: 1 })
   beds: number;
 
-  @Prop({ required: true })
+  @Prop({ required: true, min: 1 })
   bathrooms: number;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
@@ -77,7 +83,7 @@ export class Listing {
   @Prop({ default: 0, min: 0, max: 5 })
   avgRating: number;
 
-  @Prop({ default: 0 })
+  @Prop({ default: 0, min: 0 })
   reviewCount: number;
 
   @Prop({ default: true })

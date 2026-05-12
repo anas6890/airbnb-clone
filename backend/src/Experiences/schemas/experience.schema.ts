@@ -8,8 +8,8 @@ class ExperienceLocation {
   @Prop({ required: true }) address: string;
   @Prop({ required: true }) city: string;
   @Prop({ required: true }) country: string;
-  @Prop() lat: number;
-  @Prop() lng: number;
+  @Prop({ required: true }) lat: number;
+  @Prop({ required: true }) lng: number;
 }
 
 @Schema({ _id: false })
@@ -17,7 +17,7 @@ class ScheduleSlot {
   @Prop({ required: true }) date: Date;
   @Prop({ required: true }) startTime: string;
   @Prop({ required: true }) endTime: string;
-  @Prop({ default: 0 }) bookedSpots: number;
+  @Prop({ default: 0, min: 0 }) bookedSpots: number;
 }
 
 @Schema({ timestamps: true })
@@ -34,8 +34,8 @@ export class Experience {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, min: 0 })
-  duration: number;
+  @Prop({ required: true, min: 1 })
+  durationMinutes: number;
 
   @Prop({ required: true, min: 0 })
   pricePerPerson: number;
@@ -60,6 +60,9 @@ export class Experience {
 
   @Prop({ default: 0, min: 0, max: 5 })
   avgRating: number;
+
+  @Prop({ default: 0, min: 0 })
+  reviewCount: number;
 
   @Prop({ default: true })
   isActive: boolean;
