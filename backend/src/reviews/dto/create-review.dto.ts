@@ -2,19 +2,16 @@ import {
   IsString,
   IsNotEmpty,
   IsNumber,
+  IsEnum,
+  MaxLength,
   Min,
   Max,
-  IsEnum,
 } from 'class-validator';
 
 export class CreateReviewDto {
   @IsString()
   @IsNotEmpty()
   targetId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  authorId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -33,5 +30,6 @@ export class CreateReviewDto {
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(1000)
   comment: string;
 }

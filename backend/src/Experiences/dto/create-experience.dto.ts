@@ -4,35 +4,102 @@ import {
   IsNumber,
   IsArray,
   IsOptional,
-  Min,
   IsEnum,
+  IsDateString,
+  Min,
+  MaxLength,
+  ArrayMinSize,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export enum ExperienceCategory {
+  OUTDOOR = 'outdoor',
+  FOOD = 'food',
+  ART = 'art',
+  MUSIC = 'music',
+  SPORT = 'sport',
+  CULTURE = 'culture',
+  OTHER = 'other',
+}
+
+class ExperienceLocationDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(200)
+  address: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(100)
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(100)
+  country: string;
+
+  @IsNumber()
+  lat: number;
+
+  @IsNumber()
+  lng: number;
+}
+
+class ScheduleSlotDto {
+  @IsDateString()
+  date: string;
+
+  @IsString()
+  @IsNotEmpty()
+  startTime: string;
+
+  @IsString()
+  @IsNotEmpty()
+  endTime: string;
+}
 
 export class CreateExperienceDto {
-  @IsString() @IsNotEmpty() title: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(100)
+  title: string;
 
-  @IsEnum(['outdoor', 'food', 'art', 'music', 'sport', 'culture', 'other'])
-  category: string;
+  @IsEnum(ExperienceCategory)
+  category: ExperienceCategory;
 
-  @IsString() @IsNotEmpty() description: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(2000)
+  description: string;
 
-  @IsNumber() @Min(1) duration: number;
+  @IsNumber()
+  @Min(1)
+  durationMinutes: number;
 
-  @IsNumber() @Min(0) pricePerPerson: number;
+  @IsNumber()
+  @Min(0)
+  pricePerPerson: number;
 
-  @IsNumber() @Min(1) maxGroupSize: number;
+  @IsNumber()
+  @Min(1)
+  maxGroupSize: number;
 
-  @IsNotEmpty() location: {
-    address: string;
-    city: string;
-    country: string;
-    lat?: number;
-    lng?: number;
-  };
+  @ValidateNested()
+  @Type(() => ExperienceLocationDto)
+  location: ExperienceLocationDto;
 
-  @IsArray() @IsOptional() included?: string[];
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ScheduleSlotDto)
+  @IsOptional()
+  schedule?: ScheduleSlotDto[];
 
-  @IsArray() @IsOptional() images?: string[];
+  @IsArray()
+  @IsOptional()
+  included?: string[];
 
-  @IsString() @IsNotEmpty() hostId: string;
+  @IsArray()
+  @ArrayMinSize(1)
+  images: string[];
 }

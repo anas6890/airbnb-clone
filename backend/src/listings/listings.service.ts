@@ -1,8 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Listing, ListingDocument } from './schemas/listing.schema';
 import { CreateListingDto } from './dto/create-listing.dto';
+
+export interface ListingFilters {
+  city?: string;
+  type?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  guests?: number;
+}
 
 @Injectable()
 export class ListingsService {
@@ -10,40 +22,77 @@ export class ListingsService {
     @InjectModel(Listing.name) private listingModel: Model<ListingDocument>,
   ) {}
 
-  async create(dto: CreateListingDto): Promise<ListingDocument> {
-    const listing = new this.listingModel(dto);
-    return listing.save();
+  // ─── CREATE ─────────────────────────────────────────────
+  async create(dto: CreateListingDto, hostId: string) {
+    // Convertit les strings en Date pour availability
+    const availability = dto.availability?.map((window) => ({
+      from: new Date(window.from),
+      to: new Date(window.to),
+    }));
+
+    return this.listingModel.create({ ...dto, hostId, availability });
   }
 
-  async findAll(city?: string): Promise<ListingDocument[]> {
-    const filter: Record<string, any> = { isAvailable: true };
-    if (city) filter['location.city'] = new RegExp(city, 'i');
+  // ─── FIND ALL ────────────────────────────────────────────
+  async findAll(filters: ListingFilters) {
+    const query: Record<string, unknown> = { isAvailable: true };
+
+    if (filters.city) query['location.city'] = new RegExp(filters.city, 'i');
+
+    if (filters.type) query['type'] = filters.type;
+
+    if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+      query['pricePerNight'] = {
+        ...(filters.minPrice !== undefined && { $gte: filters.minPrice }),
+        ...(filters.maxPrice !== undefined && { $lte: filters.maxPrice }),
+      };
+    }
+
+    if (filters.guests) query['maxGuests'] = { $gte: filters.guests };
+
     return this.listingModel
-      .find(filter)
-      .populate('hostId', 'name email avatar');
+      .find(query)
+      .populate('hostId', 'firstname lastname email avatar');
   }
 
-  async findOne(id: string): Promise<ListingDocument> {
+  // ─── FIND ONE ────────────────────────────────────────────
+  async findOne(id: string) {
     const listing = await this.listingModel
       .findById(id)
-      .populate('hostId', 'name email avatar');
+      .populate('hostId', 'firstname lastname email avatar');
+
     if (!listing) throw new NotFoundException('Listing not found');
     return listing;
   }
 
-  async update(
-    id: string,
-    dto: Partial<CreateListingDto>,
-  ): Promise<ListingDocument> {
-    const listing = await this.listingModel.findByIdAndUpdate(id, dto, {
-      new: true,
-    });
+  // ─── UPDATE ──────────────────────────────────────────────
+  async update(id: string, dto: Partial<CreateListingDto>, userId: string) {
+    const listing = await this.listingModel.findById(id);
     if (!listing) throw new NotFoundException('Listing not found');
-    return listing;
+
+    if (listing.hostId.toString() !== userId)
+      throw new ForbiddenException('Access denied');
+
+    const availability = dto.availability?.map((window) => ({
+      from: new Date(window.from),
+      to: new Date(window.to),
+    }));
+
+    return this.listingModel.findByIdAndUpdate(
+      id,
+      { ...dto, ...(availability && { availability }) },
+      { new: true },
+    );
   }
 
-  async remove(id: string): Promise<void> {
-    const result = await this.listingModel.findByIdAndDelete(id);
-    if (!result) throw new NotFoundException('Listing not found');
+  // ─── REMOVE ──────────────────────────────────────────────
+  async remove(id: string, userId: string) {
+    const listing = await this.listingModel.findById(id);
+    if (!listing) throw new NotFoundException('Listing not found');
+
+    if (listing.hostId.toString() !== userId)
+      throw new ForbiddenException('Access denied');
+
+    await this.listingModel.findByIdAndDelete(id);
   }
 }

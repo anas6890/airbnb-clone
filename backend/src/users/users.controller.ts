@@ -1,23 +1,85 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { UsersService } from './users.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Request,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Param,
+} from '@nestjs/common';
+import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import type { RequestWithUser } from '../auth/types/request-with-user';
 
 @Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+  // POST /users/register
+  @Post('register')
+  register(@Body() dto: CreateUserDto) {
+    return this.userService.register(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  // POST /users/login
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  login(@Body() body: { email: string; password: string }) {
+    return this.userService.login(body.email, body.password);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  // GET /users/me
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@Request() req: RequestWithUser) {
+    return this.userService.getProfile(req.user.sub);
+  }
+
+  // PATCH /users/me
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  updateProfile(
+    @Request() req: RequestWithUser,
+    @Body() dto: Partial<CreateUserDto>,
+  ) {
+    return this.userService.updateProfile(req.user.sub, dto);
+  }
+
+  // DELETE /users/me
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  deleteAccount(@Request() req: RequestWithUser) {
+    return this.userService.deleteAccount(req.user.sub);
+  }
+
+  // GET /users/me/wishlist
+  @Get('me/wishlist')
+  @UseGuards(JwtAuthGuard)
+  getWishlist(@Request() req: RequestWithUser) {
+    return this.userService.getWishlist(req.user.sub);
+  }
+  // POST /users/me/wishlist/:listingId
+  @Post('me/wishlist/:listingId')
+  @UseGuards(JwtAuthGuard)
+  addToWishlist(
+    @Param('listingId') listingId: string,
+    @Request() req: RequestWithUser,
+  ) {
+    return this.userService.addToWishlist(req.user.sub, listingId);
+  }
+
+  // DELETE /users/me/wishlist/:listingId
+  @Delete('me/wishlist/:listingId')
+  @UseGuards(JwtAuthGuard)
+  removeFromWishlist(
+    @Param('listingId') listingId: string,
+    @Request() req: RequestWithUser,
+  ) {
+    return this.userService.removeFromWishlist(req.user.sub, listingId);
   }
 }
