@@ -85,6 +85,21 @@ export class ListingsService {
     );
   }
 
+  // ─── ADD PHOTOS ──────────────────────────────────────────
+  async addPhotos(id: string, photoUrls: string[], userId: string) {
+    const listing = await this.listingModel.findById(id);
+    if (!listing) throw new NotFoundException('Listing not found');
+
+    if (listing.hostId.toString() !== userId)
+      throw new ForbiddenException('Access denied');
+
+    return this.listingModel.findByIdAndUpdate(
+      id,
+      { $push: { images: { $each: photoUrls } } },
+      { new: true },
+    );
+  }
+
   // ─── REMOVE ──────────────────────────────────────────────
   async remove(id: string, userId: string) {
     const listing = await this.listingModel.findById(id);

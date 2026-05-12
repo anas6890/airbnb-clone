@@ -47,7 +47,7 @@ export class PaymentsService {
       metadata: { bookingId: dto.bookingId, userId },
     });
 
-    return this.paymentModel.create({
+    const payment = await this.paymentModel.create({
       bookingId: dto.bookingId,
       userId,
       currency,
@@ -56,6 +56,11 @@ export class PaymentsService {
       stripePaymentIntentId: intent.id,
       breakdown: { subtotal, cleaningFee, serviceFee, taxes: 0, total },
     });
+
+    return {
+      payment,
+      clientSecret: intent.client_secret,
+    };
   }
 
   // ─── FIND BY BOOKING ─────────────────────────────────────

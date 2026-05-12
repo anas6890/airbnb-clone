@@ -9,7 +9,12 @@ import {
   Query,
   UseGuards,
   Request,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { ListingsService, ListingFilters } from './listings.service';
 import { CreateListingDto } from './dto/create-listing.dto';
 import { JwtAuthGuard } from '../Auth/jwt-auth.guard';
@@ -60,6 +65,30 @@ export class ListingsController {
     @Request() req: RequestWithUser,
   ) {
     return this.listingsService.update(id, dto, req.user.sub);
+  }
+
+  // POST /listings/:id/photos — authentifié
+  @Post(':id/photos')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('photos', 10, {
+      storage: diskStorage({
+        destination: './public/uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
+  async uploadPhotos(
+    @Param('id') id: string,
+    @UploadedFiles() files: any[],
+    @Request() req: RequestWithUser,
+  ) {
+    const photoUrls = files.map(file => `/public/uploads/${file.filename}`);
+    return this.listingsService.addPhotos(id, photoUrls, req.user.sub);
   }
 
   // DELETE /listings/:id — authentifié
